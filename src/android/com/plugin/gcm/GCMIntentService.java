@@ -110,7 +110,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			} catch (NumberFormatException e) {}
 		}
 
-		NotificationCompat.Builder mBuilder =
+			NotificationCompat.Builder mBuilder =
 			new NotificationCompat.Builder(context)
 				.setDefaults(defaults)
 				.setSmallIcon(context.getApplicationInfo().icon)
@@ -122,9 +122,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 		String message = extras.getString("message");
 		if (message != null) {
-			mBuilder.setContentText(message);
+			mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
 		} else {
-			mBuilder.setContentText("<missing message content>");
+			mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText("<missing message content>")).setContentText("<missing message content>");
 		}
 
 		String msgcnt = extras.getString("msgcnt");
