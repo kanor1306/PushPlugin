@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
@@ -19,9 +21,19 @@ import com.google.android.gcm.GCMBaseIntentService;
 public class GCMIntentService extends GCMBaseIntentService {
 
 	private static final String TAG = "GCMIntentService";
-	
+	private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+	private SharedPreferences.OnSharedPreferenceChangeListener listener;
 	public GCMIntentService() {
 		super("GCMIntentService");
+		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                              public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                                if(key.split("_").length==7 && prefs.getString(key,"oiwJFIWJRGKWRJGkjhouhef").equals("")){
+                                    editor.remove(key);
+                                    editor.commit();
+                                }
+                              }
+                            };
 	}
 
 	@Override
@@ -48,6 +60,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 			// No message to the user is sent, JSON failed
 			Log.e(TAG, "onRegistered: JSON exception");
 		}
+
 	}
 
 	@Override
@@ -133,6 +146,25 @@ public class GCMIntentService extends GCMBaseIntentService {
 		}
 
 		mNotificationManager.notify((String) appName, notId, mBuilder.build());
+
+		//Crear  shared preferences con información de la notificación recibida
+        String eventName = extras.getString("eventName");
+if(prefs==null){
+                    prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                    prefs.registerOnSharedPreferenceChangeListener(listener);
+                     editor = prefs.edit();
+                    }
+
+
+
+
+
+
+        if(eventName.charAt(0)=='0'){
+            editor.putString(eventName, eventName);
+            editor.commit();
+        }
+
 	}
 	
 	private static String getAppName(Context context)
