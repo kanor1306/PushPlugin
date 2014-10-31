@@ -125,8 +125,6 @@
     UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UserNotificationTypes categories:nil];
     [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     [[UIApplication sharedApplication] registerForRemoteNotifications];
-#else
-       [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
 #endif
     
     self.callback = [options objectForKey:@"ecb"];
